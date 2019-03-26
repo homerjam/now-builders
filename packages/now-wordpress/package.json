@@ -1,14 +1,14 @@
 {
-  "name": "@now/wordpress",
-  "version": "0.4.16-canary.0",
+  "name": "@homerjam/now-builder-wordpress",
+  "version": "0.4.16-donkey.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zeit/now-builders.git",
+    "url": "https://github.com/homerjam/now-builders.git",
     "directory": "packages/now-wordpress"
   },
   "dependencies": {
-    "@now/php-bridge": "^0.4.16-canary.0",
+    "@homerjam/now-builder-php-bridge": "^0.4.16-donkey.0",
     "node-fetch": "2.3.0",
     "yauzl": "2.10.0"
   },
