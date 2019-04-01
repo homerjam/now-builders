@@ -13,4 +13,5 @@ docker run now-php-docker-image /bin/cat /usr/lib64/php/modules/mysqli.so > ../n
 docker run now-php-docker-image /bin/cat /usr/lib64/mysql/libmysqlclient.so.16 > ../native/modules/libmysqlclient.so.16
 docker run now-php-docker-image /bin/cat /usr/lib64/php/modules/opcache.so > ../native/modules/opcache.so
 docker run now-php-docker-image /bin/cat /usr/lib64/php/modules/simplexml.so > ../native/modules/simplexml.so
+docker run now-php-docker-image /bin/cat /usr/lib64/php/modules/xmlwriter.so > ../native/modules/xmlwriter.so
 chmod +x ../native/php-fpm
