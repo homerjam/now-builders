@@ -1,12 +1,12 @@
 {
-  "name": "@now/build-utils",
-  "version": "0.4.38-canary.1",
+  "name": "@homerjam/build-utils",
+  "version": "0.4.38-donkey.1",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zeit/now-builders.git",
+    "url": "https://github.com/homerjam/now-builders.git",
     "directory": "packages/now-build-utils"
   },
   "dependencies": {
