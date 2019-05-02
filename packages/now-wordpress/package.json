@@ -1,14 +1,14 @@
 {
-  "name": "@now/wordpress",
+  "name": "@homerjam/now-builder-wordpress",
   "version": "0.5.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zeit/now-builders.git",
+    "url": "https://github.com/homerjam/now-builders.git",
     "directory": "packages/now-wordpress"
   },
   "dependencies": {
-    "@now/php-bridge": "^0.5.0",
+    "@homerjam/now-builder-php-bridge": "^0.5.0",
     "node-fetch": "2.3.0",
     "yauzl": "2.10.0"
   },
