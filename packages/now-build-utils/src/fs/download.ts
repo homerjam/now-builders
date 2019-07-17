@@ -9,6 +9,22 @@ export interface DownloadedFiles {
 
 const S_IFMT = 61440; /* 0170000 type of file */
 const S_IFLNK = 40960; /* 0120000 symbolic link */
+const CHUNK_SIZE = 50;
+
+function chunkFilenames(array: string[], chunkSize: number): Array<string[]> {
+  const chunks: string[][] = [];
+  while (array.length > 0) {
+    chunks.push(array.splice(0, chunkSize));
+  }
+  return chunks;
+}
+
+function inSequence(tasks: Array<Promise<void>>) {
+  return tasks.reduce(
+    (promise: Promise<any>, task: any) => promise.then(task),
+    Promise.resolve()
+  );
+}
 
 export function isSymbolicLink(mode: number): boolean {
   return (mode & S_IFMT) === S_IFLNK;
@@ -39,8 +55,12 @@ export default async function download(
   basePath: string,
   meta?: Meta
 ): Promise<DownloadedFiles> {
-  const { isDev = false, skipDownload = false, filesChanged = null, filesRemoved = null } =
-    meta || {};
+  const {
+    isDev = false,
+    skipDownload = false,
+    filesChanged = null,
+    filesRemoved = null,
+  } = meta || {};
 
   if (isDev || skipDownload) {
     // In `now dev`, the `download()` function is a no-op because
@@ -51,25 +71,31 @@ export default async function download(
 
   const files2: DownloadedFiles = {};
 
-  await Promise.all(
-    Object.keys(files).map(async name => {
-      // If the file does not exist anymore, remove it.
-      if (Array.isArray(filesRemoved) && filesRemoved.includes(name)) {
-        await removeFile(basePath, name);
-        return;
-      }
+  const filenamesChunks = chunkFilenames(Object.keys(files), CHUNK_SIZE);
 
-      // If a file didn't change, do not re-download it.
-      if (Array.isArray(filesChanged) && !filesChanged.includes(name)) {
-        return;
-      }
+  const tasks: any[] = filenamesChunks.map(filenames => (): Promise<void[]> => {
+    return Promise.all(
+      filenames.map(async (name: string) => {
+        // If the file does not exist anymore, remove it.
+        if (Array.isArray(filesRemoved) && filesRemoved.includes(name)) {
+          await removeFile(basePath, name);
+          return;
+        }
 
-      const file = files[name];
-      const fsPath = path.join(basePath, name);
+        // If a file didn't change, do not re-download it.
+        if (Array.isArray(filesChanged) && !filesChanged.includes(name)) {
+          return;
+        }
 
-      files2[name] = await downloadFile(file, fsPath);
-    })
-  );
+        const file = files[name];
+        const fsPath = path.join(basePath, name);
+
+        files2[name] = await downloadFile(file, fsPath);
+      })
+    );
+  });
+
+  await inSequence(tasks);
 
   return files2;
 }
